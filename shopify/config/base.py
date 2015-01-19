@@ -97,9 +97,7 @@ class Base(Configuration):
 
     STATIC_URL = '/static/'
 
-    STATICFILES_DIRS = (
-        join(BASE_DIR, 'static'),
-    )
+    STATICFILES_DIRS = ()
 
     STATICFILES_FINDERS = (
         'django.contrib.staticfiles.finders.FileSystemFinder',
