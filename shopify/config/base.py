@@ -51,6 +51,8 @@ class Base(Configuration):
     
     EMAIL_BACKEND = values.Value('django.core.mail.backends.smtp.EmailBackend')
 
+    DEFAULT_FROM_EMAIL = 'help@corban.edu'
+
     ADMINS = (
         ('Jason Bittel', 'jbittel@corban.edu'),
     )
