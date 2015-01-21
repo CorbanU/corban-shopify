@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
 from django.views.generic import View
 
+from .models import ProductNotification
 from webhook.utils import verify_webhook
 
 
@@ -16,7 +17,14 @@ class OrderPaymentView(View):
 
         data = json.loads(request.body)
         for item in data['line_items']:
-            product_id = item['product_id']
-            # TODO extract additional item data
-            # TODO send notification based on product id
+            try:
+                product_notify = ProductNotification.objects.get(product_id=item['product_id'])
+            except ProductNotification.DoesNotExist:
+                pass
+            else:
+                context = data
+                # Duplicate the product data into the context dict so we
+                # easily know the specific product we're notifying for
+                context['product'] = item
+                product_notify.notify_users(context)
         return HttpResponse()
