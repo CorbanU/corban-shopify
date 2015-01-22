@@ -106,7 +106,7 @@ class Base(Configuration):
     )
 
     MEDIA_ROOT = join(BASE_DIR, 'media')
-    MEDIA_URL = '/media/'
+    MEDIA_URL = values.Value('/media/')
 
     ROOT_URLCONF = 'urls'
 
