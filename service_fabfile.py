@@ -2,6 +2,7 @@ from fabric.api import *
 
 from fabfile import install_requirements
 from fabfile import migrate_db
+from fabfile import deploy_static
 
 
 def build(service=None):
