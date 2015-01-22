@@ -13,3 +13,4 @@ def install(service=None):
     """Perform service specific post-installation tasks."""
     install_requirements()
     migrate_db(cmd='python manage.py')
+    deploy_static(static_dir='../assets/', cmd='python manage.py')
