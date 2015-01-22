@@ -96,7 +96,7 @@ class Base(Configuration):
 
     STATIC_ROOT = join(dirname(BASE_DIR), 'assets')
 
-    STATIC_URL = '/static/'
+    STATIC_URL = values.Value('/static/')
 
     STATICFILES_DIRS = ()
 
