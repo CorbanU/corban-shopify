@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from webhook.utils import verify_webhook
+from order_payment.utils import verify_webhook
 
 
 class UtilsTests(TestCase):
