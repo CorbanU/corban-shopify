@@ -17,14 +17,5 @@ class OrderPaymentView(View):
 
         data = json.loads(request.body)
         for item in data['line_items']:
-            try:
-                product_notify = ProductNotification.objects.get(product_id=item['product_id'])
-            except ProductNotification.DoesNotExist:
-                pass
-            else:
-                context = data
-                # Duplicate the product data into the context dict so we
-                # easily know the specific product we're notifying for
-                context['product'] = item
-                product_notify.notify_users(context)
+            ProductNotification.objects.notify_users(item, data)
         return HttpResponse()
