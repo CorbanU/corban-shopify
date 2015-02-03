@@ -4,8 +4,8 @@ from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
 from django.views.generic import View
 
-from .models import ProductNotification
 from .utils import verify_webhook
+from notification.models import ProductNotification
 
 
 class OrderPaymentView(View):

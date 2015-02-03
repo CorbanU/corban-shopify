@@ -21,7 +21,7 @@ class ProductNotification(models.Model):
         return self.description
 
     def notify_users(self, context):
-        message = render_to_string('order_payment/product_notification.txt',
+        message = render_to_string('notification/product_notification.txt',
                                    context)
         recipients = [u.email for u in self.users.all()]
         try:
