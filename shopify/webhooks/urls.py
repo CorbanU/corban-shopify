@@ -6,5 +6,5 @@ from .views import OrderPaymentView
 
 
 urlpatterns = patterns('',
-    url(r'^order-payment/(?P<uuid>[a-z0-9-]+)/$', OrderPaymentView.as_view()),
+    url(r'^orders/paid/(?P<uuid>[a-z0-9-]+)/$', OrderPaymentView.as_view()),
 )
