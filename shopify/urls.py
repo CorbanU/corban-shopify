@@ -5,6 +5,6 @@ from django.contrib import admin
 
 
 urlpatterns = patterns('',
-    url(r'', include('order_payment.urls')),
+    url(r'', include('webhooks.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
