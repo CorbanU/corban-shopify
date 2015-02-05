@@ -7,6 +7,7 @@ from django.views.generic import View
 from .models import Webhook
 from .utils import verify_webhook
 from notification.models import ProductNotification
+from product.models import Product
 
 
 class ValidateMixin(object):
@@ -14,7 +15,7 @@ class ValidateMixin(object):
         # Validate provided UUID
         uuid = self.kwargs.get('uuid')
         try:
-            webhook = Webhook.objects.get(id=uuid)
+            Webhook.objects.get(id=uuid)
         except Webhook.DoesNotExist:
             return HttpResponseBadRequest()
 
@@ -31,4 +32,18 @@ class OrdersPaidView(ValidateMixin, View):
         data = json.loads(request.body)
         for item in data['line_items']:
             ProductNotification.objects.notify_users(item, data)
+        return HttpResponse()
+
+
+class ProductsCreateView(ValidateMixin, View):
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        Product.objects.create(product_id=data['id'], description=data['title'])
+        return HttpResponse()
+
+
+class ProductsUpdateView(ValidateMixin, View):
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        Product.objects.filter(product_id=data['id']).update(description=data['title'])
         return HttpResponse()
