@@ -42,9 +42,16 @@ class Base(Configuration):
     DEBUG = values.BooleanValue(False)
     TEMPLATE_DEBUG = DEBUG
 
-    # These keys are used only for development and testing, not production
+    SITE_ID = 1
+
+    # This key is used only for development and testing, not production
     SECRET_KEY = 'j@9$@!yvmds6**a@f_3fi!iny73f#jl(#a-^t0vskk#ehy^n6d'
-    SHOPIFY_SHARED_SECRET = '098f6bcd4621d373cade4e832627b4f6'
+
+    SHOPIFY_SHARED_SECRET = values.SecretValue()
+    SHOPIFY_API_KEY = values.SecretValue()
+    SHOPIFY_PASSWORD = values.SecretValue()
+    SHOPIFY_SHARED_SECRET = values.SecretValue()
+    SHOPIFY_HOSTNAME = values.Value()
 
     FIXTURE_DIRS = (
         join(BASE_DIR, 'fixtures'),
@@ -152,7 +159,7 @@ class Base(Configuration):
                 'handlers': ['mail_admins'],
                 'level': 'ERROR',
             },
-            'shopify': {
+            'webhooks': {
                 'handlers': ['console'],
                 'level': 'INFO',
             },
