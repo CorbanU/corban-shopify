@@ -1,5 +1,3 @@
-from configurations import values
-
 from .production import Production
 
 

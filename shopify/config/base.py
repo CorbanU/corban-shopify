@@ -56,7 +56,7 @@ class Base(Configuration):
     FIXTURE_DIRS = (
         join(BASE_DIR, 'fixtures'),
     )
-    
+
     EMAIL_BACKEND = values.Value('django.core.mail.backends.smtp.EmailBackend')
 
     DEFAULT_FROM_EMAIL = 'help@corban.edu'

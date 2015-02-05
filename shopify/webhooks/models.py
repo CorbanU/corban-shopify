@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-import json
 import logging
 import uuid
 
@@ -16,6 +15,7 @@ from .utils import shopify_api
 logger = logging.getLogger(__name__)
 
 
+@python_2_unicode_compatible
 class Webhook(models.Model):
     TOPIC_CHOICES = (
         ('orders/create', 'Order creation'),
@@ -90,7 +90,7 @@ class Webhook(models.Model):
                                  json=payload)
             resp.raise_for_status()
             webhook_id = resp.json()['webhook']['id']
-        except requests.exceptions.RequestException as e:
+        except requests.exceptions.RequestException:
             logger.error("Webhook creation returned %s: %s" % (resp.status_code,
                                                                resp.text))
         else:
@@ -100,6 +100,6 @@ class Webhook(models.Model):
         try:
             resp = requests.delete(shopify_api('/admin/webhooks/%d.json' % self.webhook_id))
             resp.raise_for_status()
-        except requests.exceptions.RequestException as e:
+        except requests.exceptions.RequestException:
             logger.error("Webhook removal returned %s: %s" % (resp.status_code,
                                                               resp.text))
