@@ -9,7 +9,7 @@ from .utils import verify_webhook
 from notification.models import ProductNotification
 
 
-class OrderPaymentView(View):
+class ValidateMixin(object):
     def post(self, request, *args, **kwargs):
         # Validate provided UUID
         uuid = self.kwargs.get('uuid')
@@ -23,6 +23,11 @@ class OrderPaymentView(View):
         if not verify_webhook(request.body, hmac_sha256):
             return HttpResponseBadRequest()
 
+        super(ValidateMixin, self).post(request, *args, **kwargs)
+
+
+class OrdersPaidView(ValidateMixin, View):
+    def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
         for item in data['line_items']:
             ProductNotification.objects.notify_users(item, data)
