@@ -14,7 +14,7 @@ class Product(models.Model):
     description = models.CharField(max_length=255)
 
     # Internal account number for this product
-    account_number = models.IntegerField(null=True, blank=True)
+    account_number = models.BigIntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.description
