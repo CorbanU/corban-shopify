@@ -33,7 +33,7 @@ class OrdersPaidView(ValidateMixin, View):
         data = json.loads(request.body)
         for item in data['line_items']:
             ProductNotification.objects.notify_users(item, data)
-            Transaction.objects.add_transaction(item['id'], item['price'])
+            Transaction.objects.add_transaction(item['product_id'], item['price'])
         return HttpResponse()
 
 
