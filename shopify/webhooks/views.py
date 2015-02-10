@@ -43,12 +43,15 @@ class OrdersPaidView(ValidateMixin, View):
 class ProductsCreateView(ValidateMixin, View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
-        Product.objects.create(product_id=data['id'], description=data['title'])
+        Product.objects.create(product_id=data['id'],
+                               product_type=data['product_type'],
+                               description=data['title'])
         return HttpResponse()
 
 
 class ProductsUpdateView(ValidateMixin, View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
-        Product.objects.filter(product_id=data['id']).update(description=data['title'])
+        Product.objects.filter(product_id=data['id']).update(product_type=data['product_type'],
+                                                             description=data['title'])
         return HttpResponse()

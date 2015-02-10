@@ -10,6 +10,9 @@ class Product(models.Model):
     # Shopify product ID number for unique identification
     product_id = models.IntegerField(unique=True)
 
+    # Product type for which this transaction occurred
+    product_type = models.CharField(max_length=64, blank=True)
+
     # Informative description, only used for display purposes
     description = models.CharField(max_length=255)
 
@@ -27,9 +30,10 @@ class TransactionManager(models.Manager):
         except Product.DoesNotExist:
             pass
         else:
-            self.create(product=product, order_id=order_id,
-                        order_number=order_number, price=price,
-                        created_at=now())
+            if not product.product_type.lower() == 'deposit':
+                self.create(product=product, order_id=order_id,
+                            order_number=order_number, price=price,
+                            created_at=now())
 
 
 class Transaction(models.Model):
