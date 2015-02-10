@@ -36,7 +36,8 @@ class OrdersPaidView(ValidateMixin, View):
             Transaction.objects.add_transaction(item['product_id'],
                                                 data['id'],
                                                 data['order_number'],
-                                                item['price'] * item['quantity'])
+                                                item['price'],
+                                                item['quantity'])
         return HttpResponse()
 
 

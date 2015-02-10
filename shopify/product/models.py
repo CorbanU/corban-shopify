@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from decimal import Decimal
+
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
@@ -24,16 +26,16 @@ class Product(models.Model):
 
 
 class TransactionManager(models.Manager):
-    def add_transaction(self, product_id, order_id, order_number, price):
+    def add_transaction(self, product_id, order_id, order_number, price, quantity):
         try:
             product = Product.objects.get(product_id=product_id)
         except Product.DoesNotExist:
             pass
         else:
-            if not product.product_type.lower() == 'deposit':
-                self.create(product=product, order_id=order_id,
-                            order_number=order_number, price=price,
-                            created_at=now())
+            total_price = Decimal(price) * Decimal(quantity)
+            self.create(product=product, order_id=order_id,
+                        order_number=order_number, price=total_price,
+                        created_at=now())
 
 
 class Transaction(models.Model):
