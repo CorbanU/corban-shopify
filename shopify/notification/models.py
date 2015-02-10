@@ -41,7 +41,7 @@ class ProductNotification(models.Model):
     objects = ProductNotificationManager()
 
     def __str__(self):
-        return "Notification for %s" % self.product.description
+        return "%s notification" % self.product.description
 
     def send_notification(self, context):
         message = render_to_string('notification/product_notification.txt',
