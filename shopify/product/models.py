@@ -21,18 +21,26 @@ class Product(models.Model):
 
 
 class TransactionManager(models.Manager):
-    def add_transaction(self, id, price):
+    def add_transaction(self, product_id, order_id, order_number, price):
         try:
-            product = Product.objects.get(product_id=id)
+            product = Product.objects.get(product_id=product_id)
         except Product.DoesNotExist:
             pass
         else:
-            self.create(product=product, price=price, created_at=now())
+            self.create(product=product, order_id=order_id,
+                        order_number=order_number, price=price,
+                        created_at=now())
 
 
 class Transaction(models.Model):
     # Product for which this transaction occurred
     product = models.ForeignKey(Product)
+
+    # Shopify order id containing the transaction
+    order_id = models.IntegerField(null=True, blank=True)
+
+    # Order number containing the transaction
+    order_number = models.IntegerField(null=True, blank=True)
 
     # Price of product for this transaction
     price = models.DecimalField(decimal_places=2, max_digits=6)
