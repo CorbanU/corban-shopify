@@ -34,7 +34,7 @@ class OrdersPaidView(ValidateMixin, View):
         for item in data['line_items']:
             ProductNotification.objects.notify_users(item, data)
             Transaction.objects.add_transaction(item['product_id'],
-                                                data['order_id'],
+                                                data['id'],
                                                 data['order_number'],
                                                 item['price'] * item['quantity'])
         return HttpResponse()
