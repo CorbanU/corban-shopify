@@ -18,17 +18,17 @@ def email_journal_vouchers_import():
     """
     """
     try:
-        credits = Transaction.objects.export_transactions()
-        debit = Decimal(0)
+        transactions = Transaction.objects.export_transactions()
+        debit_sum = Decimal(0)
         attachment = CSVAttachmentWriter()
 
-        for credit in credits:
-            attachment.writerow([credit['product__account_number'], '',
-                                 credit['price__sum']])
-            debit += credit['price__sum']
+        for transaction in transactions:
+            attachment.writerow([transaction['product__account_number'], '',
+                                 transaction['price__sum']])
+            debit_sum += transaction['price__sum']
 
         debit_account = getattr(settings, 'SHOPIFY_DEBIT_ACCOUNT_NUMBER', None)
-        attachment.writerow([debit_account, debit, ''])
+        attachment.writerow([debit_account, debit_sum, ''])
 
         message = EmailMessage('Journal Vouchers Import', '',
                                to=[m[1] for m in settings.MANAGERS])
