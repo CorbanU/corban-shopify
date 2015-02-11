@@ -26,7 +26,9 @@ def email_journal_vouchers_import():
             attachment.writerow([credit['product__account_number'], '',
                                  credit['price__sum']])
             debit += credit['price__sum']
-        attachment.writerow([settings.SHOPIFY_DEBIT_ACCOUNT_NUMBER, debit, ''])
+
+        debit_account = getattr(settings, 'SHOPIFY_DEBIT_ACCOUNT_NUMBER', None)
+        attachment.writerow([debit_account, debit, ''])
 
         message = EmailMessage('Journal Vouchers Import', '',
                                to=[m[1] for m in settings.MANAGERS])
