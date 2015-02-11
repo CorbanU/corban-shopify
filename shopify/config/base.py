@@ -58,6 +58,7 @@ class Base(Configuration):
         join(BASE_DIR, 'fixtures'),
     )
 
+    EMAIL_SUBJECT_PREFIX = ''
     EMAIL_BACKEND = values.Value('django.core.mail.backends.smtp.EmailBackend')
 
     DEFAULT_FROM_EMAIL = 'help@corban.edu'
