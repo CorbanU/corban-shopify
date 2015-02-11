@@ -28,7 +28,8 @@ def email_journal_vouchers_import():
             debit += credit['price__sum']
         attachment.writerow([settings.SHOPIFY_DEBIT_ACCOUNT_NUMBER, debit, ''])
 
-        message = EmailMessage('Journal Vouchers Import', '', to=settings.MANAGERS)
+        message = EmailMessage('Journal Vouchers Import', '',
+                               to=[m[1] for m in settings.MANAGERS])
         message.attach(attachment.getname(), attachment.getvalue(), 'text/csv')
         message.send()
     except Exception as exc:
