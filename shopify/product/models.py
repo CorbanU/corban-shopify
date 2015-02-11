@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from decimal import Decimal
 
 from django.db import models
+from django.db.models import Sum
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 
@@ -36,6 +37,13 @@ class TransactionManager(models.Manager):
             self.create(product=product, order_id=order_id,
                         order_number=order_number, price=total_price,
                         created_at=now())
+
+    def export_transactions(self):
+        transactions = self.filter(exported_at__isnull=True).exclude(product__account_number__isnull=True)
+        # Force queryset evaluation so we can call update on the queryset
+        t = list(transactions.values('product__account_number').annotate(Sum('price')))
+        transactions.update(exported_at=now())
+        return t
 
 
 class Transaction(models.Model):

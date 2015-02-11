@@ -52,6 +52,7 @@ class Base(Configuration):
     SHOPIFY_PASSWORD = values.SecretValue()
     SHOPIFY_SHARED_SECRET = values.SecretValue()
     SHOPIFY_HOSTNAME = values.Value()
+    SHOPIFY_DEBIT_ACCOUNT_NUMBER = values.Value()
 
     FIXTURE_DIRS = (
         join(BASE_DIR, 'fixtures'),
@@ -167,3 +168,8 @@ class Base(Configuration):
     }
 
     TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+    BROKER_URL = 'redis://localhost:6379/0'
+
+    CELERY_RESULT_BACKEND = BROKER_URL
+    CELERY_DISABLE_RATE_LIMITS = True
