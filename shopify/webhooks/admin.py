@@ -7,7 +7,7 @@ from .models import Webhook
 
 
 class WebhookAdmin(admin.ModelAdmin):
-    actions = ['create', 'remove']
+    actions = ['register', 'delete']
 
     class Meta:
         model = Webhook
@@ -18,19 +18,22 @@ class WebhookAdmin(admin.ModelAdmin):
             del actions['delete_selected']
         return actions
 
-    def create(self, request, queryset):
-        for webhook in queryset:
-            webhook.create()
+    def register(self, request, queryset):
+        queryset.register()
         name_plural = force_text(self.model._meta.verbose_name_plural)
-        self.message_user(request, _("Created selected %s" % name_plural))
-    create.short_description = ugettext_lazy("Create selected %(verbose_name_plural)s")
+        self.message_user(request, _("Register selected %s" % name_plural))
+    register.short_description = ugettext_lazy("Register selected %(verbose_name_plural)s")
 
-    def remove(self, request, queryset):
+    def delete(self, request, queryset):
+        """
+        A custom delete action that explicitly calls delete() for each
+        object. This causes the deletion API call to be fired.
+        """
         for webhook in queryset:
             webhook.delete()
         name_plural = force_text(self.model._meta.verbose_name_plural)
         self.message_user(request, _("Deleted selected %s" % name_plural))
-    remove.short_description = ugettext_lazy("Delete selected %(verbose_name_plural)s")
+    delete.short_description = ugettext_lazy("Delete selected %(verbose_name_plural)s")
 
 
 admin.site.register(Webhook, WebhookAdmin)
