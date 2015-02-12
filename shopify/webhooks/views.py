@@ -34,10 +34,10 @@ class OrdersPaidView(ValidateMixin, View):
         for item in data['line_items']:
             ProductNotification.objects.notify_users(item, data)
             Transaction.objects.add_transaction(item['product_id'],
-                                                data['id'],
-                                                data['order_number'],
                                                 item['price'],
-                                                item['quantity'])
+                                                item['quantity'],
+                                                order_id=data['id'],
+                                                order_number=data['order_number'])
         return HttpResponse()
 
 
@@ -55,4 +55,17 @@ class ProductsUpdateView(ValidateMixin, View):
         data = json.loads(request.body)
         Product.objects.filter(product_id=data['id']).update(product_type=data['product_type'],
                                                              description=data['title'])
+        return HttpResponse()
+
+
+class RefundsCreateView(ValidateMixin, View):
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        for refund in data['refund_line_items']:
+            item = refund['line_item']
+            Transaction.objects.add_transaction(item['product_id'],
+                                                item['price'],
+                                                item['quantity'],
+                                                credit=False,
+                                                order_id=data['order_id'])
         return HttpResponse()

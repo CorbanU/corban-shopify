@@ -18,23 +18,33 @@ def email_journal_vouchers_import():
     """
     """
     try:
-        transactions = Transaction.objects.export_transactions()
-        if len(transactions) == 0:
+        credits = Transaction.objects.get_credits()
+        debits = Transaction.objects.get_debits()
+        if len(credits) == 0 and len(debits) == 0:
             mail_managers('No journal vouchers to import', '')
         else:
+            credit_sum = Decimal(0)
             debit_sum = Decimal(0)
             attachment = CSVAttachmentWriter()
+            cash_account = getattr(settings, 'SHOPIFY_CASH_ACCOUNT_NUMBER', None)
 
-            for transaction in transactions:
-                attachment.writerow([transaction['product__account_number'], '',
-                                     transaction['price__sum']])
-                debit_sum += transaction['price__sum']
+            for credit in credits:
+                attachment.writerow([credit['product__account_number'],
+                                     '', credit['amount']])
+                credit_sum += credit['amount']
+            if credit_sum:
+                attachment.writerow([cash_account, credit_sum, ''])
 
-            debit_account = getattr(settings, 'SHOPIFY_DEBIT_ACCOUNT_NUMBER', None)
-            attachment.writerow([debit_account, debit_sum, ''])
+            for debit in debits:
+                attachment.writerow([debit['product__account_number'],
+                                     debit['amount'], ''])
+                debit_sum += debit['amount']
+            if debit_sum:
+                attachment.writerow([cash_account, '', debit_sum])
+
             mail_managers('Journal vouchers import', '', attachment=attachment)
     except Exception as exc:
-        logger.debug("Emailing journal voucher import faiiled: %s" % exc)
+        logger.debug("Emailing journal voucher import failed: %s" % exc)
         logger.warn('Emailing journal voucher import failed, retrying')
         raise email_mip_import_file.retry(exc=exc)
 

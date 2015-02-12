@@ -27,37 +27,48 @@ class Product(models.Model):
 
 
 class TransactionManager(models.Manager):
-    def add_transaction(self, product_id, order_id, order_number, price, quantity):
+    def add_transaction(self, product_id, price, quantity,
+                        credit=True, order_id=None, order_number=None):
         try:
             product = Product.objects.get(product_id=product_id)
         except Product.DoesNotExist:
             pass
         else:
-            total_price = Decimal(price) * Decimal(quantity)
-            self.create(product=product, order_id=order_id,
-                        order_number=order_number, price=total_price,
+            amount = Decimal(price) * Decimal(quantity)
+            self.create(product=product, amount=amount, is_credit=credit,
+                        order_id=order_id, order_number=order_number,
                         created_at=now())
 
-    def export_transactions(self):
-        transactions = self.filter(exported_at__isnull=True).exclude(product__account_number__isnull=True)
+    def get_credits(self):
+        credits = self.filter(exported_at__isnull=True, is_credit=True).exclude(product__account_number__isnull=True)
         # Force queryset evaluation so we can call update on the queryset
-        t = list(transactions.values('product__account_number').annotate(Sum('price')))
-        transactions.update(exported_at=now())
-        return t
+        result = list(credits.values('product__account_number').annotate(amount=Sum('amount')))
+        credits.update(exported_at=now())
+        return result
+
+    def get_debits(self):
+        debits = self.filter(exported_at__isnull=True, is_credit=False).exclude(product__account_number__isnull=True)
+        # Force queryset evaluation so we can call update on the queryset
+        result = list(debits.values('product__account_number').annotate(amount=Sum('amount')))
+        debits.update(exported_at=now())
+        return result
 
 
 class Transaction(models.Model):
     # Product for which this transaction occurred
     product = models.ForeignKey(Product)
 
+    # Amount (price * quantity) for this transaction
+    amount = models.DecimalField(decimal_places=2, max_digits=6)
+
+    # Specify if transaction type is credit or debit
+    is_credit = models.BooleanField(default=True)
+
     # Shopify order id containing the transaction
     order_id = models.IntegerField(null=True, blank=True)
 
     # Order number containing the transaction
     order_number = models.IntegerField(null=True, blank=True)
-
-    # Price of product for this transaction
-    price = models.DecimalField(decimal_places=2, max_digits=6)
 
     # When the transaction occurred
     created_at = models.DateTimeField()

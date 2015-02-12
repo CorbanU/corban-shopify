@@ -52,7 +52,7 @@ class Base(Configuration):
     SHOPIFY_PASSWORD = values.SecretValue()
     SHOPIFY_SHARED_SECRET = values.SecretValue()
     SHOPIFY_HOSTNAME = values.Value()
-    SHOPIFY_DEBIT_ACCOUNT_NUMBER = values.Value()
+    SHOPIFY_CASH_ACCOUNT_NUMBER = values.Value()
 
     FIXTURE_DIRS = (
         join(BASE_DIR, 'fixtures'),
