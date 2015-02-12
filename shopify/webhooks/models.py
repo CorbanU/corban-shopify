@@ -15,6 +15,16 @@ from .utils import shopify_api
 logger = logging.getLogger(__name__)
 
 
+class WebhookManager(models.Manager):
+    def register(self):
+        for webhook in self.all():
+            webhook.register()
+
+    def remove(self):
+        for webhook in self.all():
+            webhook.remove()
+
+
 @python_2_unicode_compatible
 class Webhook(models.Model):
     TOPIC_CHOICES = (
@@ -49,6 +59,8 @@ class Webhook(models.Model):
         ('shop/update', 'Shop update'),
     )
 
+    objects = WebhookManager()
+
     # Automatically generated GUID for the local webhook. This
     # GUID is also used to construct a unique URL.
     id = models.CharField(primary_key=True, default=uuid.uuid4,
@@ -65,7 +77,7 @@ class Webhook(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.webhook_id:
-            self.create()
+            self.register()
         super(Webhook, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
@@ -81,7 +93,7 @@ class Webhook(models.Model):
         base = 'https://%s' % Site.objects.get_current().domain
         return base + self.path
 
-    def create(self):
+    def register(self):
         payload = {'webhook': {'topic': self.topic,
                                'address': self.get_absolute_url(),
                                'format': 'json'}}
