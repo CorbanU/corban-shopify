@@ -10,12 +10,13 @@ class CSVAttachmentWriter:
     def __init__(self, dialect=csv.excel, **kwargs):
         self.queue = cStringIO.StringIO()
         self.writer = csv.writer(self.queue, dialect=dialect, **kwargs)
-        local_now = strftime("%m%d%Y", localtime(now()).timetuple())
-        self.row_leader = ["JVI%s" % local_now, 'JV', 'BP', 'N', local_now,
-                           'Import Cash Receipts', local_now]
+        self.local_now = strftime("%m%d%Y", localtime(now()).timetuple())
+        self.row_leader = ["JVI%s" % self.local_now, 'JV', 'BP', 'N',
+                           self.local_now, 'Import Cash Receipts',
+                           self.local_now]
 
     def getname(self):
-        return 'import.csv'
+        return "import%s.csv" % self.local_now
 
     def getvalue(self):
         return self.queue.getvalue()
