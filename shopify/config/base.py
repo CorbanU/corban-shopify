@@ -174,3 +174,4 @@ class Base(Configuration):
 
     CELERY_RESULT_BACKEND = BROKER_URL
     CELERY_DISABLE_RATE_LIMITS = True
+    CELERY_DEFAULT_QUEUE = 'shopify'
