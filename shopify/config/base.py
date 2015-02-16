@@ -170,7 +170,7 @@ class Base(Configuration):
 
     TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-    BROKER_URL = 'redis://localhost:6379/0'
+    BROKER_URL = 'redis://localhost:6379/1'
 
     CELERY_RESULT_BACKEND = BROKER_URL
     CELERY_DISABLE_RATE_LIMITS = True
