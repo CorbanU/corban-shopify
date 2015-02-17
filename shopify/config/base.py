@@ -66,7 +66,7 @@ class Base(Configuration):
     ADMINS = (
         ('Jason Bittel', 'jbittel@corban.edu'),
     )
-    MANAGERS = ADMINS
+    MANAGERS = values.ListValue([a[1] for a in ADMINS])
 
     DATABASES = values.DatabaseURLValue('postgres://localhost/shopify')
 
