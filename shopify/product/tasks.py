@@ -49,7 +49,7 @@ def email_journal_vouchers_import():
     except Exception as exc:
         logger.debug("Emailing journal voucher import failed: %s" % exc)
         logger.warn('Emailing journal voucher import failed, retrying')
-        raise email_mip_import_file.retry(exc=exc)
+        raise email_journal_vouchers_import.retry(exc=exc)
 
 
 def mail_managers(subject, message, attachment=None, fail_silently=False):
