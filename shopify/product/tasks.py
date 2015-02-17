@@ -27,11 +27,13 @@ def email_journal_vouchers_import():
             debit_sum = Decimal(0)
             attachment = CSVAttachmentWriter()
             cash_account = getattr(settings, 'SHOPIFY_CASH_ACCOUNT_NUMBER', None)
+            order_numbers = ''
 
             for credit in credits:
                 attachment.writerow([credit['product__account_number'],
                                      '', credit['amount']])
                 credit_sum += credit['amount']
+                order_numbers += "%s\t%s\n" % (credit['order_number'], credit['amount'])
             if credit_sum:
                 attachment.writerow([cash_account, credit_sum, ''])
 
@@ -39,10 +41,11 @@ def email_journal_vouchers_import():
                 attachment.writerow([debit['product__account_number'],
                                      debit['amount'], ''])
                 debit_sum += debit['amount']
+                order_numbers += "%s\t%s\n" % (debit['order_number'], credit['amount'])
             if debit_sum:
                 attachment.writerow([cash_account, '', debit_sum])
 
-            mail_managers('Journal vouchers import', '', attachment=attachment)
+            mail_managers('Journal vouchers import', order_numbers, attachment=attachment)
     except Exception as exc:
         logger.debug("Emailing journal voucher import failed: %s" % exc)
         logger.warn('Emailing journal voucher import failed, retrying')

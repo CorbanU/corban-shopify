@@ -42,14 +42,14 @@ class TransactionManager(models.Manager):
     def get_credits(self):
         credits = self.filter(exported_at__isnull=True, is_credit=True).exclude(product__account_number__isnull=True)
         # Force queryset evaluation so we can call update on the queryset
-        result = list(credits.values('product__account_number').annotate(amount=Sum('amount')))
+        result = list(credits.values('product__account_number', 'order_number').order_by('order_number').annotate(amount=Sum('amount')))
         credits.update(exported_at=now())
         return result
 
     def get_debits(self):
         debits = self.filter(exported_at__isnull=True, is_credit=False).exclude(product__account_number__isnull=True)
         # Force queryset evaluation so we can call update on the queryset
-        result = list(debits.values('product__account_number').annotate(amount=Sum('amount')))
+        result = list(debits.values('product__account_number', 'order_number').order_by('order_number').annotate(amount=Sum('amount')))
         debits.update(exported_at=now())
         return result
 
