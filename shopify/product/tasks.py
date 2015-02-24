@@ -33,7 +33,8 @@ def email_journal_vouchers_import():
                 attachment.writerow([credit['product__account_number'],
                                      '', credit['amount']])
                 credit_sum += credit['amount']
-                order_numbers += "%s\t%s\n" % (credit['order_number'], credit['amount'])
+                order_numbers += "%s\t%s\n" % (credit['order_number'],
+                                               credit['amount'])
             if credit_sum:
                 attachment.writerow([cash_account, credit_sum, ''])
 
@@ -41,7 +42,8 @@ def email_journal_vouchers_import():
                 attachment.writerow([debit['product__account_number'],
                                      debit['amount'], ''])
                 debit_sum += debit['amount']
-                order_numbers += "%s\t%s\n" % (debit['order_number'], credit['amount'])
+                order_numbers += "%s\t%s\n" % (debit['order_number'],
+                                               debit['amount'])
             if debit_sum:
                 attachment.writerow([cash_account, '', debit_sum])
 
