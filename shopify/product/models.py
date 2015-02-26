@@ -10,13 +10,13 @@ from django.utils.timezone import now
 
 @python_2_unicode_compatible
 class Product(models.Model):
-    # Shopify product ID number for unique identification
+    # Unique Shopify product ID number
     product_id = models.IntegerField(unique=True)
 
-    # Product type for which this transaction occurred
+    # Type for this product (fee, deposit, etc.)
     product_type = models.CharField(max_length=64, blank=True)
 
-    # Informative description, only used for display purposes
+    # Informative description, used for display purposes
     description = models.CharField(max_length=255)
 
     # Internal account number for this product
@@ -64,16 +64,16 @@ class Transaction(models.Model):
     # Specify if transaction type is credit or debit
     is_credit = models.BooleanField(default=True)
 
-    # Shopify order id containing the transaction
+    # Shopify order ID for the transaction
     order_id = models.IntegerField(null=True, blank=True)
 
-    # Order number containing the transaction
+    # Order number for the transaction
     order_number = models.IntegerField(null=True, blank=True)
 
     # When the transaction occurred
     created_at = models.DateTimeField()
 
-    # Set when a transaction has been exported
+    # When the transaction was exported
     exported_at = models.DateTimeField(editable=False, null=True)
 
     objects = TransactionManager()

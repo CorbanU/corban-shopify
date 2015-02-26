@@ -16,6 +16,9 @@ logger = get_task_logger(__name__)
 @app.task(max_retries=3)
 def email_journal_vouchers_import():
     """
+    Build an email to send to the configured managers with
+    transaction data attached. If no transaction data is
+    available, send an empty email.
     """
     try:
         credits = Transaction.objects.get_credits()
