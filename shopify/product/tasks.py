@@ -21,8 +21,8 @@ def email_journal_vouchers_import():
     available, send an empty email.
     """
     try:
-        credits = Transaction.objects.get_credits()
-        debits = Transaction.objects.get_debits()
+        credits = Transaction.objects.get_amounts()
+        debits = Transaction.objects.get_amounts(credit=False)
         if len(credits) == 0 and len(debits) == 0:
             mail_managers('No journal vouchers to import', '')
         else:
