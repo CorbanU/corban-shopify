@@ -1,4 +1,4 @@
-Order #{{ order_number }} received at {{ processed_at }}
+Order {{ order_name }} received at {{ processed_at }}
 
 {{ product.quantity }}x {{ product.name }} @ ${{ product.price }}
 {% for property in product.properties %}
