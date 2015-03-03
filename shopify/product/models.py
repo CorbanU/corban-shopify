@@ -27,8 +27,7 @@ class Product(models.Model):
 
 
 class TransactionManager(models.Manager):
-    def add_transaction(self, product_id, price, quantity,
-                        credit=True, order_id=None, order_number=None):
+    def add_transaction(self, product_id, price, quantity, credit=True, **kwargs):
         try:
             product = Product.objects.get(product_id=product_id)
         except Product.DoesNotExist:
@@ -36,8 +35,7 @@ class TransactionManager(models.Manager):
         else:
             amount = Decimal(price) * Decimal(quantity)
             self.create(product=product, amount=amount, is_credit=credit,
-                        order_id=order_id, order_number=order_number,
-                        created_at=now())
+                        created_at=now(), **kwargs)
 
     def get_amounts(self, credit=True):
         """
@@ -48,7 +46,7 @@ class TransactionManager(models.Manager):
         """
         transactions = self.filter(exported_at__isnull=True, is_credit=credit).exclude(product__account_number__isnull=True)
         # Force queryset evaluation so we can call update on the queryset
-        amounts = list(transactions.values('product__account_number', 'order_number').order_by('order_number').annotate(amount=Sum('amount')))
+        amounts = list(transactions.values('product__account_number', 'order_name').order_by('order_name').annotate(amount=Sum('amount')))
         transactions.update(exported_at=now())
         return amounts
 
@@ -66,8 +64,8 @@ class Transaction(models.Model):
     # Shopify order ID for the transaction
     order_id = models.IntegerField(null=True, blank=True)
 
-    # Order number for the transaction
-    order_number = models.IntegerField(null=True, blank=True)
+    # Order name for the transaction
+    order_name = models.CharField(max_length=16, blank=True)
 
     # When the transaction occurred
     created_at = models.DateTimeField()
