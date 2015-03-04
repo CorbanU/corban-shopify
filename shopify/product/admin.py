@@ -5,6 +5,7 @@ from .models import Product
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('description', 'product_type', 'account_number')
+    ordering = ('description',)
 
     class Meta:
         model = Product
