@@ -43,12 +43,14 @@ class ProductNotification(models.Model):
     def __str__(self):
         return "%s notification" % self.product.description
 
+    def get_recipients(self):
+        return [user.email for user in self.users.all()]
+
     def send_notification(self, context):
         message = render_to_string('notification/product_notification.txt',
                                    context)
-        recipients = [u.email for u in self.users.all()]
         try:
             send_mail('Corban Order Payment Received', message,
-                      settings.DEFAULT_FROM_EMAIL, recipients)
+                      settings.DEFAULT_FROM_EMAIL, self.get_recipients())
         except SMTPException as e:
             logger.error("SMTP failed: %s" % e)
