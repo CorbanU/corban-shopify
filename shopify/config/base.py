@@ -25,6 +25,7 @@ class Base(Configuration):
     LOCAL_APPS = (
         'notification',
         'product',
+        'user',
         'webhooks',
     )
 
