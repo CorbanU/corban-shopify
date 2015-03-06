@@ -4,6 +4,7 @@ import logging
 from smtplib import SMTPException
 
 from django.conf import settings
+from django.contrib.auth.models import Group
 from django.core.mail import send_mail
 from django.db import models
 from django.template.loader import render_to_string
@@ -35,8 +36,11 @@ class ProductNotification(models.Model):
     # Product for which notifications occur
     product = models.ForeignKey(Product)
 
-    # Users to notify for this particular product
+    # Users to notify for this product
     users = models.ManyToManyField(settings.AUTH_USER_MODEL)
+
+    # Groups of users to notify for this product
+    groups = models.ManyToManyField(Group)
 
     objects = ProductNotificationManager()
 
@@ -44,7 +48,14 @@ class ProductNotification(models.Model):
         return "%s notification" % self.product.description
 
     def get_recipients(self):
-        return [user.email for user in self.users.all()]
+        """
+        Return a list of unique recipients from the associated
+        users and groups.
+        """
+        recipients = set([user.email for user in self.users.all()])
+        for group in self.groups.all():
+            recipients.update([user.email for user in group.user_set.all()])
+        return list(recipients)
 
     def send_notification(self, context):
         message = render_to_string('notification/product_notification.txt',
