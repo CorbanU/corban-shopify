@@ -20,10 +20,6 @@ class WebhookManager(models.Manager):
         for webhook in self.all():
             webhook.register()
 
-    def remove(self):
-        for webhook in self.all():
-            webhook.remove()
-
 
 @python_2_unicode_compatible
 class Webhook(models.Model):
