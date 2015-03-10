@@ -13,7 +13,7 @@ from celeryapp import app
 logger = get_task_logger(__name__)
 
 
-@app.task(max_retries=3)
+@app.task
 def email_journal_vouchers_import():
     """
     Build an email to send to the configured managers with
@@ -51,10 +51,8 @@ def email_journal_vouchers_import():
                 attachment.writerow([cash_account, '', debit_sum])
 
             mail_managers('Journal vouchers import', order_names, attachment=attachment)
-    except Exception as exc:
-        logger.debug("Emailing journal voucher import failed: %s" % exc)
-        logger.warn('Emailing journal voucher import failed, retrying')
-        raise email_journal_vouchers_import.retry(exc=exc)
+    except Exception:
+        logger.exception('Emailing journal voucher import failed')
 
 
 def mail_managers(subject, message, attachment=None, fail_silently=False):
