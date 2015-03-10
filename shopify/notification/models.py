@@ -37,10 +37,10 @@ class ProductNotification(models.Model):
     product = models.ForeignKey(Product)
 
     # Users to notify for this product
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
 
     # Groups of users to notify for this product
-    groups = models.ManyToManyField(Group)
+    groups = models.ManyToManyField(Group, blank=True)
 
     objects = ProductNotificationManager()
 
@@ -58,6 +58,10 @@ class ProductNotification(models.Model):
         return list(recipients)
 
     def send_notification(self, context):
+        """
+        Send an email notification to the designated recipients
+        with the given context.
+        """
         message = render_to_string('notification/product_notification.txt',
                                    context)
         try:
