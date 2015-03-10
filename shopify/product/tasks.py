@@ -16,39 +16,33 @@ logger = get_task_logger(__name__)
 @app.task
 def email_journal_vouchers_import():
     """
-    Build an email to send to the configured managers with
-    transaction data attached. If no transaction data is
-    available, send an empty email.
+    Send an email to the configured managers with transaction data
+    attached.
     """
     try:
-        credits = Transaction.objects.get_amounts()
-        debits = Transaction.objects.get_amounts(credit=False)
-        if len(credits) == 0 and len(debits) == 0:
+        transactions = Transaction.objects.get_amounts()
+        if len(transactions) == 0:
             mail_managers('No journal vouchers to import', '')
         else:
-            credit_sum = Decimal(0)
-            debit_sum = Decimal(0)
             attachment = CSVAttachmentWriter()
             cash_account = getattr(settings, 'SHOPIFY_CASH_ACCOUNT_NUMBER', None)
             order_names = ''
 
-            for credit in credits:
-                attachment.writerow([credit['product__account_number'],
-                                     '', credit['amount']])
-                credit_sum += credit['amount']
-                order_names += "%s\t%s\n" % (credit['order_name'],
-                                             credit['amount'])
-            if credit_sum:
-                attachment.writerow([cash_account, credit_sum, ''])
+            for transaction in transactions:
+                account_number = transaction['product__account_number']
+                cash_account_number = str(account_number)[0] + cash_account
+                amount = transaction['amount']
+                order_name = transaction['order_name'] or ''
+                is_credit = transaction['is_credit']
 
-            for debit in debits:
-                attachment.writerow([debit['product__account_number'],
-                                     debit['amount'], ''])
-                debit_sum += debit['amount']
-                order_names += "%s\t%s\n" % (debit['order_name'],
-                                             debit['amount'])
-            if debit_sum:
-                attachment.writerow([cash_account, '', debit_sum])
+                if is_credit:
+                    attachment.writerow([account_number, '', amount])
+                    attachment.writerow([cash_account_number, amount, ''])
+                else:
+                    attachment.writerow([account_number, amount, ''])
+                    attachment.writerow([cash_account_number, '', amount])
+
+                order_names += "%s\t%s\n" % (order_name, amount)
 
             mail_managers('Journal vouchers import', order_names, attachment=attachment)
     except Exception:

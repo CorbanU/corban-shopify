@@ -37,16 +37,16 @@ class TransactionManager(models.Manager):
             self.create(product=product, amount=amount, is_credit=credit,
                         created_at=now(), **kwargs)
 
-    def get_amounts(self, credit=True):
+    def get_amounts(self):
         """
         Return aggregated transaction amounts of all transactions
         that have not already been exported and have a product
         account number. All returned transactions are marked as
         exported.
         """
-        transactions = self.filter(exported_at__isnull=True, is_credit=credit).exclude(product__account_number__isnull=True)
+        transactions = self.filter(exported_at__isnull=True).exclude(product__account_number__isnull=True)
         # Force queryset evaluation so we can call update on the queryset
-        amounts = list(transactions.values('product__account_number', 'order_name').order_by('order_name').annotate(amount=Sum('amount')))
+        amounts = list(transactions.values('product__account_number', 'order_name', 'is_credit').order_by('order_name').annotate(amount=Sum('amount')))
         transactions.update(exported_at=now())
         return amounts
 
