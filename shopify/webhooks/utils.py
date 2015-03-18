@@ -8,6 +8,9 @@ from django.core.exceptions import ImproperlyConfigured
 
 
 def verify_webhook(data, hmac_header):
+    if not hmac_header:
+        return False
+
     shared_secret = getattr(settings, 'SHOPIFY_SHARED_SECRET', None)
     if shared_secret is None:
         err = ('SHOPIFY_SHARED_SECRET must be specified in your '
