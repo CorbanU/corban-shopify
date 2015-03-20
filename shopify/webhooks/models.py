@@ -17,12 +17,17 @@ logger = logging.getLogger(__name__)
 
 class WebhookManager(models.Manager):
     def register(self):
+        """Register all created webhooks."""
         for webhook in self.all():
             webhook.register()
 
 
 @python_2_unicode_compatible
 class Webhook(models.Model):
+    """
+    Create and manage Shopify webhooks.
+    For more information, see: https://docs.shopify.com/api/webhook
+    """
     TOPIC_CHOICES = (
         ('orders/create', 'Order creation'),
         ('orders/delete', 'Order deletion'),
@@ -62,7 +67,7 @@ class Webhook(models.Model):
     id = models.CharField(primary_key=True, default=uuid.uuid4,
                           max_length=36, editable=False)
 
-    # An accepted event that will trigger the webhook
+    # The event handled by the webhook
     topic = models.CharField(max_length=32, choices=TOPIC_CHOICES)
 
     # A unique Shopify ID for the webhook
@@ -90,6 +95,7 @@ class Webhook(models.Model):
         return base + self.path
 
     def register(self):
+        """Register the webhook with Shopify."""
         payload = {'webhook': {'topic': self.topic,
                                'address': self.get_absolute_url(),
                                'format': 'json'}}
@@ -105,6 +111,7 @@ class Webhook(models.Model):
             self.webhook_id = webhook_id
 
     def remove(self):
+        """Remove the webhook from Shopify."""
         try:
             resp = requests.delete(shopify_api('/admin/webhooks/%d.json' % self.webhook_id))
             resp.raise_for_status()
