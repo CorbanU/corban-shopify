@@ -1,15 +1,7 @@
-Order {{ order_name }} received at {{ processed_at }}
+{{ billing_address.first_name }} {{ billing_address.last_name }} placed order {{ name }} at {{ created_at|date:"SHORT_DATETIME_FORMAT" }}
 
-{{ product.quantity }}x {{ product.name }} @ ${{ product.price }}
+{{ product.quantity }}x {{ product.name }} for ${{ product.price }} each
 {% for property in product.properties %}
   {{ property.name }}: {{ property.value }}
 {% endfor %}
 {{ note }}
-
-
-Billing Address:
-
-  {{ billing_address.first_name }} {{ billing_address.last_name }}
-  {{ billing_address.address1 }} {{ billing_address.address2 }}
-  {{ billing_address.city }}, {{ billing_address.province }} {{ billing_address.zip }}
-  {{ billing_address.phone }}

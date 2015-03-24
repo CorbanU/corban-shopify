@@ -10,6 +10,8 @@ from django.db import models
 from django.template.loader import render_to_string
 from django.utils.encoding import python_2_unicode_compatible
 
+import dateutil.parser
+
 from product.models import Product
 
 
@@ -25,6 +27,9 @@ class ProductNotificationManager(models.Manager):
             pass
         else:
             context = data
+            # Convert to a datetime object so we can format it
+            # within the template
+            context['created_at'] = dateutil.parser.parse(context['created_at'])
             # Duplicate the product data into the context dict so we
             # easily know the specific product we're notifying for
             context['product'] = item
@@ -62,10 +67,13 @@ class ProductNotification(models.Model):
         Send an email notification to the designated recipients
         with the given context.
         """
+        subject = "Order %s placed by %s %s" % (context['name'],
+                                                context['billing_address']['first_name'],
+                                                context['billing_address']['last_name'])
         message = render_to_string('notification/product_notification.txt',
                                    context)
         try:
-            send_mail('Corban Order Payment Received', message,
-                      settings.DEFAULT_FROM_EMAIL, self.get_recipients())
+            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL,
+                      self.get_recipients())
         except SMTPException as e:
             logger.error("SMTP failed: %s" % e)
