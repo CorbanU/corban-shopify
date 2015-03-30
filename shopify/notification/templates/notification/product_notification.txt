@@ -1,4 +1,8 @@
+{% if customer %}
 {{ customer.first_name }} {{ customer.last_name }} placed order {{ name }} at {{ created_at|date:"SHORT_DATETIME_FORMAT" }}
+{% else %}
+Order {{ name }} placed at {{ created_at|date:"SHORT_DATETIME_FORMAT" }}
+{% endif %}
 
 {{ product.quantity }}x {{ product.name }} for ${{ product.price }} each
 {% for property in product.properties %}

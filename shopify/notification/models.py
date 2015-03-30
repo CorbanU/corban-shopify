@@ -67,9 +67,7 @@ class ProductNotification(models.Model):
         Send an email notification to the designated recipients
         with the given context.
         """
-        subject = "Order %s placed by %s %s" % (context['name'],
-                                                context['customer']['first_name'],
-                                                context['customer']['last_name'])
+        subject = "Order %s received" % context['name']
         message = render_to_string('notification/product_notification.txt',
                                    context)
         try:
