@@ -68,8 +68,8 @@ class ProductNotification(models.Model):
         with the given context.
         """
         subject = "Order %s placed by %s %s" % (context['name'],
-                                                context['billing_address']['first_name'],
-                                                context['billing_address']['last_name'])
+                                                context['customer']['first_name'],
+                                                context['customer']['last_name'])
         message = render_to_string('notification/product_notification.txt',
                                    context)
         try:

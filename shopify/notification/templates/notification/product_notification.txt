@@ -1,4 +1,4 @@
-{{ billing_address.first_name }} {{ billing_address.last_name }} placed order {{ name }} at {{ created_at|date:"SHORT_DATETIME_FORMAT" }}
+{{ customer.first_name }} {{ customer.last_name }} placed order {{ name }} at {{ created_at|date:"SHORT_DATETIME_FORMAT" }}
 
 {{ product.quantity }}x {{ product.name }} for ${{ product.price }} each
 {% for property in product.properties %}
