@@ -26,7 +26,7 @@ class ProductNotificationManager(models.Manager):
         except ProductNotification.DoesNotExist:
             pass
         else:
-            context = data
+            context = data.copy()
             # Convert to a datetime object so we can format it
             # within the template
             context['created_at'] = dateutil.parser.parse(context['created_at'])
