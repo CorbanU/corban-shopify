@@ -24,7 +24,7 @@ class ProductNotificationManager(models.Manager):
         try:
             notify = ProductNotification.objects.get(product__product_id=product_id)
         except ProductNotification.DoesNotExist:
-            pass
+            logger.warning("No notifications configured for product %d" % product_id)
         else:
             context = data.copy()
             # Convert to a datetime object so we can format it
@@ -76,4 +76,6 @@ class ProductNotification(models.Model):
             send_mail(subject, message, settings.DEFAULT_FROM_EMAIL,
                       self.get_recipients())
         except SMTPException as e:
-            logger.error("SMTP failed: %s" % e)
+            logger.error("Error sending notification: %s" % e)
+        else:
+            logger.info("Sent notification for order %s" % context['name'])

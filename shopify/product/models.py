@@ -1,12 +1,16 @@
 from __future__ import unicode_literals
 
 from decimal import Decimal
+import logging
 
 from django.db import IntegrityError
 from django.db import models
 from django.db.models import Sum
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
+
+
+logger = logging.getLogger(__name__)
 
 
 @python_2_unicode_compatible
@@ -32,14 +36,15 @@ class TransactionManager(models.Manager):
         try:
             product = Product.objects.get(product_id=product_id)
         except Product.DoesNotExist:
-            pass
+            logger.warning("Could not add transaction for non-existent product %d" % product_id)
         else:
             amount = Decimal(price) * Decimal(quantity)
             try:
                 self.create(product=product, amount=amount, is_credit=credit,
                             created_at=now(), **kwargs)
-            except IntegrityError:
-                pass
+            except IntegrityError as e:
+                order_name = kwargs.pop('order_name', '')
+                logger.warning("Error adding transaction %s: %s" % (order_name, e))
 
     def get_amounts(self):
         """

@@ -161,6 +161,14 @@ class Base(Configuration):
                 'handlers': ['mail_admins'],
                 'level': 'ERROR',
             },
+            'notification': {
+                'handlers': ['console'],
+                'level': 'INFO',
+            },
+            'product': {
+                'handlers': ['console'],
+                'level': 'INFO',
+            },
             'webhooks': {
                 'handlers': ['console'],
                 'level': 'INFO',
