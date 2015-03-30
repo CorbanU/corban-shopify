@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from decimal import Decimal
 
+from django.db import IntegrityError
 from django.db import models
 from django.db.models import Sum
 from django.utils.encoding import python_2_unicode_compatible
@@ -34,8 +35,11 @@ class TransactionManager(models.Manager):
             pass
         else:
             amount = Decimal(price) * Decimal(quantity)
-            self.create(product=product, amount=amount, is_credit=credit,
-                        created_at=now(), **kwargs)
+            try:
+                self.create(product=product, amount=amount, is_credit=credit,
+                            created_at=now(), **kwargs)
+            except IntegrityError:
+                pass
 
     def get_amounts(self):
         """
