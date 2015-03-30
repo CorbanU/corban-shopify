@@ -37,7 +37,8 @@ class OrdersPaidView(ValidateMixin, View):
                                                 item['price'],
                                                 item['quantity'],
                                                 order_id=data['id'],
-                                                order_name=data['name'])
+                                                order_name=data['name'],
+                                                item_id=item['id'])
         return HttpResponse()
 
 
