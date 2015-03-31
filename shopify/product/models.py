@@ -71,13 +71,13 @@ class Transaction(models.Model):
     is_credit = models.BooleanField(default=True)
 
     # Shopify order ID for the transaction
-    order_id = models.IntegerField(null=True, blank=True)
+    order_id = models.IntegerField()
 
     # Shopify order name for the transaction
-    order_name = models.CharField(max_length=16, blank=True)
+    order_name = models.CharField(max_length=16)
 
     # Shopify item ID for the transaction
-    item_id = models.IntegerField(null=True, blank=True)
+    item_id = models.IntegerField()
 
     # When the transaction occurred
     created_at = models.DateTimeField()
@@ -86,3 +86,6 @@ class Transaction(models.Model):
     exported_at = models.DateTimeField(editable=False, null=True)
 
     objects = TransactionManager()
+
+    class Meta:
+        unique_together = ('order_id', 'item_id')
