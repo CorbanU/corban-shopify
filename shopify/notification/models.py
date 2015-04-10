@@ -67,7 +67,7 @@ class ProductNotification(models.Model):
         Send an email notification to the designated recipients
         with the given context.
         """
-        subject = "Order %s received" % context['name']
+        subject = "Order placed for %s [%s]" % (context['product']['name'], context['name'])
         message = render_to_string('notification/product_notification.txt',
                                    context)
         try:
@@ -76,4 +76,4 @@ class ProductNotification(models.Model):
         except SMTPException as e:
             logger.error("Error sending notification: %s" % e)
         else:
-            logger.info("Sent notification for order %s" % context['name'])
+            logger.info("Sent notification for %s [%s]" % (context['product']['name'], context['name']))
