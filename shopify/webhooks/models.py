@@ -103,12 +103,11 @@ class Webhook(models.Model):
             resp = requests.post(shopify_api('/admin/webhooks.json'),
                                  json=payload)
             resp.raise_for_status()
-            webhook_id = resp.json()['webhook']['id']
         except requests.exceptions.RequestException:
             logger.error("Webhook creation returned %s: %s" % (resp.status_code,
                                                                resp.text))
         else:
-            self.webhook_id = webhook_id
+            self.webhook_id = resp.json()['webhook']['id']
 
     def remove(self):
         """Remove the webhook from Shopify."""
