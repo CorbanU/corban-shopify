@@ -68,5 +68,6 @@ class RefundsCreateView(ValidateMixin, View):
                                                 item['price'],
                                                 item['quantity'],
                                                 credit=False,
-                                                order_id=data['order_id'])
+                                                order_id=data['order_id'],
+                                                item_id=item['id'])
         return HttpResponse()
