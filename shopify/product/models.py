@@ -73,8 +73,9 @@ class Transaction(models.Model):
     # Shopify order ID for the transaction
     order_id = models.IntegerField()
 
-    # Shopify order name for the transaction
-    order_name = models.CharField(max_length=16)
+    # Shopify order name for the transaction; not available
+    # if this is a refund
+    order_name = models.CharField(max_length=16, blank=True)
 
     # Shopify item ID for the transaction
     item_id = models.IntegerField()
