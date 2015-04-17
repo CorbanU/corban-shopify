@@ -7,10 +7,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
 
-def verify_webhook(data, hmac_header):
-    if not hmac_header:
-        return False
-
+def calculate_hmac(data):
     shared_secret = getattr(settings, 'SHOPIFY_SHARED_SECRET', None)
     if shared_secret is None:
         err = ('SHOPIFY_SHARED_SECRET must be specified in your '
@@ -18,8 +15,13 @@ def verify_webhook(data, hmac_header):
         raise ImproperlyConfigured(err)
 
     digest = hmac.new(shared_secret, data, hashlib.sha256).digest()
-    calculated_hmac = base64.b64encode(digest)
-    return calculated_hmac == hmac_header
+    return base64.b64encode(digest)
+
+
+def verify_webhook(data, hmac_header):
+    if not hmac_header:
+        return False
+    return calculate_hmac(data) == hmac_header
 
 
 def shopify_api(path, query=''):
