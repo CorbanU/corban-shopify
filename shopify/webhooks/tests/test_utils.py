@@ -2,6 +2,8 @@ from webhooks.utils import verify_webhook
 
 
 class TestUtils:
+    filename = 'fixtures/orders-paid.json'
+
     def test_verify_webhook_valid(self, json, hmac):
         assert verify_webhook(json, hmac)
 
