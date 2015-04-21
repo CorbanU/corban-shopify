@@ -15,6 +15,8 @@ class Production(Base):
     CELERYBEAT_SCHEDULE = {
         'email_journal_vouchers_import': {
             'task': 'product.tasks.email_journal_vouchers_import',
-            'schedule': crontab(minute=0, hour=0),
+            # Generate import file at 21:00 every night. This matches
+            # the Shopify transaction cutoff at midnight EST.
+            'schedule': crontab(minute=0, hour=21),
         }
     }
