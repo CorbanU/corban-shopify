@@ -1,11 +1,10 @@
 from django.test import Client
 
-from mock import patch
 import pytest
 
+from .factories import WebhookFactory
 from product.models import Product
 from product.models import Transaction
-from webhooks.models import Webhook
 
 
 @pytest.mark.django_db
@@ -15,13 +14,7 @@ class TestOrders:
     def test_orders_paid(self, json, hmac):
         Product.objects.create(product_id=123456, description='Sledgehammer')
         Product.objects.create(product_id=12345, description='Wire Cutter')
-        with patch('requests.post') as mock:
-            mock.return_value.status_code = 200
-            mock.return_value.raise_for_status.return_value = None
-            mock.return_value.raise_for_status()
-            mock.return_value.json.return_value = {'webhook': {'id': 12345}}
-            mock.return_value.json()
-            hook = Webhook.objects.create(topic='orders/paid')
+        hook = WebhookFactory(topic='orders/paid')
 
         c = Client()
         c.post(hook.path, data=json, content_type='text/json',
@@ -36,13 +29,7 @@ class TestRefunds:
     def test_refunds_create(self, json, hmac):
         Product.objects.create(product_id=123456, description='Sledgehammer')
         Product.objects.create(product_id=12345, description='Wire Cutter')
-        with patch('requests.post') as mock:
-            mock.return_value.status_code = 200
-            mock.return_value.raise_for_status.return_value = None
-            mock.return_value.raise_for_status()
-            mock.return_value.json.return_value = {'webhook': {'id': 12345}}
-            mock.return_value.json()
-            hook = Webhook.objects.create(topic='refunds/create')
+        hook = WebhookFactory(topic='refunds/create')
 
         c = Client()
         c.post(hook.path, data=json, content_type='text/json',
