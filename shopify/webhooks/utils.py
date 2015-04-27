@@ -8,6 +8,10 @@ from django.core.exceptions import ImproperlyConfigured
 
 
 def calculate_hmac(data):
+    """
+    Generate a SHA256 HMAC from the given data and the
+    configured shared secret.
+    """
     shared_secret = getattr(settings, 'SHOPIFY_SHARED_SECRET', None)
     if shared_secret is None:
         err = ('SHOPIFY_SHARED_SECRET must be specified in your '
@@ -19,8 +23,12 @@ def calculate_hmac(data):
 
 
 def verify_webhook(data, hmac_header):
+    """
+    Verify that the given data matches the given HMAC header.
+    """
     if not hmac_header:
         return False
+    # TODO switch to hmac.compare_digest(a, b) once on Python 2.7.7
     return calculate_hmac(data) == hmac_header
 
 
