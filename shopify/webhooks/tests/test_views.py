@@ -2,8 +2,8 @@ from django.test import Client
 
 import pytest
 
+from .factories import ProductFactory
 from .factories import WebhookFactory
-from product.models import Product
 from product.models import Transaction
 
 
@@ -12,8 +12,8 @@ class TestOrders:
     filename = 'fixtures/orders-paid.json'
 
     def test_orders_paid(self, json, hmac):
-        Product.objects.create(product_id=123456, description='Sledgehammer')
-        Product.objects.create(product_id=12345, description='Wire Cutter')
+        ProductFactory(product_id=123456)
+        ProductFactory(product_id=12345)
         hook = WebhookFactory(topic='orders/paid')
 
         c = Client()
@@ -27,8 +27,8 @@ class TestRefunds:
     filename = 'fixtures/refunds-create.json'
 
     def test_refunds_create(self, json, hmac):
-        Product.objects.create(product_id=123456, description='Sledgehammer')
-        Product.objects.create(product_id=12345, description='Wire Cutter')
+        ProductFactory(product_id=123456)
+        ProductFactory(product_id=12345)
         hook = WebhookFactory(topic='refunds/create')
 
         c = Client()

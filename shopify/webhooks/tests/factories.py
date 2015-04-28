@@ -1,7 +1,19 @@
 import factory
+from factory import fuzzy
 from mock import patch
 
+from product.models import Product
 from webhooks.models import Webhook
+
+
+class ProductFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Product
+
+    product_id = fuzzy.FuzzyInteger(100000, 999999)
+    product_type = fuzzy.FuzzyChoice(['Deposit', 'Fee', 'Purchase'])
+    description = fuzzy.FuzzyText(length=64)
+    account_number = fuzzy.FuzzyInteger(1000000, 9999999)
 
 
 class WebhookFactory(factory.django.DjangoModelFactory):
