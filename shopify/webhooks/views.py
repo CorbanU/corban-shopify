@@ -1,7 +1,8 @@
 import json
 
+from django.core.exceptions import SuspiciousOperation
+from django.http import Http404
 from django.http import HttpResponse
-from django.http import HttpResponseBadRequest
 from django.views.generic import View
 
 from .models import Webhook
@@ -18,18 +19,17 @@ class ValidateMixin(object):
         try:
             Webhook.objects.get(id=uuid)
         except Webhook.DoesNotExist:
-            return HttpResponseBadRequest()
+            raise Http404
 
         # Validate received data
         hmac_sha256 = request.META.get('HTTP_X_SHOPIFY_HMAC_SHA256', None)
         if not verify_webhook(request.body, hmac_sha256):
-            return HttpResponseBadRequest()
-
-        super(ValidateMixin, self).post(request, *args, **kwargs)
+            raise SuspiciousOperation('Invalid HMAC header provided')
 
 
 class OrdersPaidView(ValidateMixin, View):
     def post(self, request, *args, **kwargs):
+        super(OrdersPaidView, self).post(request, *args, **kwargs)
         data = json.loads(request.body)
         for item in data['line_items']:
             ProductNotification.objects.notify_users(item, data)
@@ -44,6 +44,7 @@ class OrdersPaidView(ValidateMixin, View):
 
 class ProductsCreateView(ValidateMixin, View):
     def post(self, request, *args, **kwargs):
+        super(ProductsCreateView, self).post(request, *args, **kwargs)
         data = json.loads(request.body)
         Product.objects.create(product_id=data['id'],
                                product_type=data['product_type'],
@@ -53,6 +54,7 @@ class ProductsCreateView(ValidateMixin, View):
 
 class ProductsUpdateView(ValidateMixin, View):
     def post(self, request, *args, **kwargs):
+        super(ProductsUpdateView, self).post(request, *args, **kwargs)
         data = json.loads(request.body)
         Product.objects.filter(product_id=data['id']).update(product_type=data['product_type'],
                                                              description=data['title'])
@@ -61,6 +63,7 @@ class ProductsUpdateView(ValidateMixin, View):
 
 class RefundsCreateView(ValidateMixin, View):
     def post(self, request, *args, **kwargs):
+        super(RefundsCreateView, self).post(request, *args, **kwargs)
         data = json.loads(request.body)
         for refund in data['refund_line_items']:
             item = refund['line_item']
