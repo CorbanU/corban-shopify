@@ -7,7 +7,9 @@ from .factories import WebhookFactory
 from product.models import Transaction
 
 
-@pytest.mark.django_db
+pytestmark = pytest.mark.django_db
+
+
 class TestOrders:
     filename = 'fixtures/orders-paid.json'
 
@@ -22,7 +24,6 @@ class TestOrders:
         assert Transaction.objects.count() == 2
 
 
-@pytest.mark.django_db
 class TestRefunds:
     filename = 'fixtures/refunds-create.json'
 
