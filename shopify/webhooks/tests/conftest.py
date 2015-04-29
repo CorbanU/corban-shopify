@@ -7,8 +7,9 @@ from webhooks.utils import calculate_hmac
 
 @pytest.fixture(scope='class')
 def json(request):
+    pwd = os.path.dirname(__file__)
     filename = getattr(request.cls, 'filename')
-    with open(os.path.join(os.path.dirname(__file__), filename)) as f:
+    with open(os.path.join(pwd, 'fixtures', filename)) as f:
         json = f.read()
     return json
 

@@ -11,7 +11,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestOrders:
-    filename = 'fixtures/orders-paid.json'
+    filename = 'orders-paid.json'
 
     def test_orders_paid(self, json, hmac):
         ProductFactory(product_id=123456)
@@ -25,7 +25,7 @@ class TestOrders:
 
 
 class TestRefunds:
-    filename = 'fixtures/refunds-create.json'
+    filename = 'refunds-create.json'
 
     def test_refunds_create(self, json, hmac):
         ProductFactory(product_id=123456)
