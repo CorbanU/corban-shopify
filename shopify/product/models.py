@@ -81,7 +81,7 @@ class Transaction(models.Model):
     item_id = models.IntegerField()
 
     # When the transaction occurred
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(editable=False)
 
     # When the transaction was exported
     exported_at = models.DateTimeField(editable=False, null=True)
@@ -89,4 +89,4 @@ class Transaction(models.Model):
     objects = TransactionManager()
 
     class Meta:
-        unique_together = ('order_id', 'item_id')
+        unique_together = ('is_credit', 'order_id', 'item_id')

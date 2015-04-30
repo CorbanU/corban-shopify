@@ -2,7 +2,10 @@ import factory
 from factory import fuzzy
 from mock import patch
 
+from django.utils.timezone import now
+
 from product.models import Product
+from product.models import Transaction
 from webhooks.models import Webhook
 
 
@@ -14,6 +17,19 @@ class ProductFactory(factory.django.DjangoModelFactory):
     product_type = fuzzy.FuzzyChoice(['Deposit', 'Fee', 'Purchase'])
     description = fuzzy.FuzzyText(length=64)
     account_number = fuzzy.FuzzyInteger(1000000, 9999999)
+
+
+class TransactionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Transaction
+
+    product = factory.SubFactory(ProductFactory)
+    amount = fuzzy.FuzzyFloat(1.00, 100.00)
+    is_credit = True
+    order_id = fuzzy.FuzzyInteger(1000000, 9999999)
+    order_name = fuzzy.FuzzyText(length=8)
+    item_id = fuzzy.FuzzyInteger(100000, 999999)
+    created_at = now()
 
 
 class WebhookFactory(factory.django.DjangoModelFactory):

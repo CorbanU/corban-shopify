@@ -3,6 +3,7 @@ from django.test import Client
 import pytest
 
 from .factories import ProductFactory
+from .factories import TransactionFactory
 from .factories import WebhookFactory
 from product.models import Product
 from product.models import Transaction
@@ -85,3 +86,14 @@ class TestRefundsCreate:
         c.post(hook.path, data=json, content_type='text/json',
                HTTP_X_SHOPIFY_HMAC_SHA256=hmac)
         assert Transaction.objects.count() == 2
+
+    def test_refunds_reverse_transaction(self, json, hmac):
+        ProductFactory(product_id=123456)
+        p = ProductFactory(product_id=12345)
+        TransactionFactory(product=p, order_id=123456, item_id=56789)
+        hook = WebhookFactory(topic='refunds/create')
+
+        c = Client()
+        c.post(hook.path, data=json, content_type='text/json',
+               HTTP_X_SHOPIFY_HMAC_SHA256=hmac)
+        assert Transaction.objects.count() == 3
