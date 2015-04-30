@@ -11,6 +11,26 @@ from product.models import Transaction
 pytestmark = pytest.mark.django_db
 
 
+class TestWebhookValidation:
+    filename = 'orders-paid.json'
+
+    def test_webhook_does_not_exist(self, json, hmac):
+        hook_path = '/orders/paid/123/'
+
+        c = Client()
+        response = c.post(hook_path, data=json, content_type='text/json',
+                          HTTP_X_SHOPIFY_HMAC_SHA256=hmac)
+        assert response.status_code == 404
+
+    def test_webhook_invalid_hmac_header(self, json):
+        hook = WebhookFactory(topic='orders/paid')
+
+        c = Client()
+        response = c.post(hook.path, data=json, content_type='text/json',
+                          HTTP_X_SHOPIFY_HMAC_SHA256='123')
+        assert response.status_code == 400
+
+
 class TestOrdersPaid:
     filename = 'orders-paid.json'
 
