@@ -1,4 +1,4 @@
-from webhooks.utils import verify_webhook
+from webhook.utils import verify_webhook
 
 
 class TestUtils:

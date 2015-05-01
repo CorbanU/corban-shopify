@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 
 import requests
 
-from webhooks.utils import shopify_api
+from webhook.utils import shopify_api
 
 
 class Command(BaseCommand):

@@ -26,7 +26,7 @@ class Base(Configuration):
         'notification',
         'product',
         'user',
-        'webhooks',
+        'webhook',
     )
 
     INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -169,7 +169,7 @@ class Base(Configuration):
                 'handlers': ['console'],
                 'level': 'INFO',
             },
-            'webhooks': {
+            'webhook': {
                 'handlers': ['console'],
                 'level': 'INFO',
             },

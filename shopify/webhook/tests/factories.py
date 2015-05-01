@@ -6,7 +6,7 @@ from django.utils.timezone import now
 
 from product.models import Product
 from product.models import Transaction
-from webhooks.models import Webhook
+from webhook.models import Webhook
 
 
 class ProductFactory(factory.django.DjangoModelFactory):

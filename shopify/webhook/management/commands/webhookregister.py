@@ -1,6 +1,6 @@
 from django.core.management.base import NoArgsCommand
 
-from webhooks.models import Webhook
+from webhook.models import Webhook
 
 
 class Command(NoArgsCommand):

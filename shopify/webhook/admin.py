@@ -14,11 +14,16 @@ class WebhookAdmin(admin.ModelAdmin):
 
     def get_actions(self, request):
         actions = super(WebhookAdmin, self).get_actions(request)
+        # Remove the default object delete admin action
         if 'delete_selected' in actions:
             del actions['delete_selected']
         return actions
 
     def register(self, request, queryset):
+        """
+        Register all selected ``Webhook`` objects with the
+        Shopify API.
+        """
         queryset.register()
         name_plural = force_text(self.model._meta.verbose_name_plural)
         self.message_user(request, _("Register selected %s" % name_plural))

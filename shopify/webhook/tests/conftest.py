@@ -2,7 +2,7 @@ import os.path
 
 import pytest
 
-from webhooks.utils import calculate_hmac
+from webhook.utils import calculate_hmac
 
 
 @pytest.fixture(scope='class')

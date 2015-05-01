@@ -5,6 +5,6 @@ from django.contrib import admin
 
 
 urlpatterns = patterns('',
-    url(r'', include('webhooks.urls')),
+    url(r'', include('webhook.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
