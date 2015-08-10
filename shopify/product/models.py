@@ -71,14 +71,14 @@ class Transaction(models.Model):
     is_credit = models.BooleanField(default=True)
 
     # Shopify order ID for the transaction
-    order_id = models.IntegerField()
+    order_id = models.BigIntegerField()
 
     # Shopify order name for the transaction; not available
     # if this is a refund
     order_name = models.CharField(max_length=16, blank=True)
 
     # Shopify item ID for the transaction
-    item_id = models.IntegerField()
+    item_id = models.BigIntegerField()
 
     # When the transaction occurred
     created_at = models.DateTimeField(editable=False)
