@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @python_2_unicode_compatible
 class Product(models.Model):
     # Unique Shopify product ID number
-    product_id = models.IntegerField(unique=True)
+    product_id = models.BigIntegerField(unique=True)
 
     # Type for this product (fee, deposit, etc.)
     product_type = models.CharField(max_length=64, blank=True)
