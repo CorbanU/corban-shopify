@@ -71,7 +71,7 @@ class Webhook(models.Model):
     topic = models.CharField(max_length=32, choices=TOPIC_CHOICES)
 
     # A unique Shopify ID for the webhook
-    webhook_id = models.IntegerField(editable=False)
+    webhook_id = models.BigIntegerField(editable=False)
 
     def __str__(self):
         return self.path
