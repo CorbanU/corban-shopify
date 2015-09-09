@@ -1,5 +1,5 @@
 celery==3.1.18
-Django==1.7.9
+Django==1.7.10
 dj-database-url==0.3.0
 django-cache-url==1.0.0
 django-configurations==0.8
