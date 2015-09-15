@@ -31,14 +31,15 @@ class OrdersPaidView(ValidateMixin, View):
     def post(self, request, *args, **kwargs):
         super(OrdersPaidView, self).post(request, *args, **kwargs)
         data = json.loads(request.body)
-        for item in data['line_items']:
-            Transaction.objects.add_transaction(item['product_id'],
-                                                item['price'],
-                                                item['quantity'],
-                                                order_id=data['id'],
-                                                order_name=data['name'],
-                                                item_id=item['id'])
-            ProductNotification.objects.notify_users(item, data)
+        if data['financial_status'] == 'paid':
+            for item in data['line_items']:
+                Transaction.objects.add_transaction(item['product_id'],
+                                                    item['price'],
+                                                    item['quantity'],
+                                                    order_id=data['id'],
+                                                    order_name=data['name'],
+                                                    item_id=item['id'])
+                ProductNotification.objects.notify_users(item, data)
         return HttpResponse()
 
 
