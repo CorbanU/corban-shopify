@@ -36,7 +36,10 @@ class TransactionManager(models.Manager):
         try:
             product = Product.objects.get(product_id=product_id)
         except Product.DoesNotExist:
-            logger.warning("Could not add transaction for non-existent product %d" % product_id)
+            if product_id:
+                logger.warning("Could not add transaction for non-existent product %d" % product_id)
+            else:
+                logger.warning("Could not add transaction for non-existent product")
         else:
             amount = Decimal(price) * Decimal(quantity)
             try:
