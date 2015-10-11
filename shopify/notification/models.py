@@ -21,6 +21,8 @@ logger = logging.getLogger(__name__)
 class ProductNotificationManager(models.Manager):
     def notify_users(self, item, data):
         product_id = item['product_id']
+        if not product_id:
+            return
         try:
             notify = ProductNotification.objects.get(product__product_id=product_id)
         except ProductNotification.DoesNotExist:
