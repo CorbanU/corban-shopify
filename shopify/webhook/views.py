@@ -66,12 +66,15 @@ class RefundsCreateView(ValidateMixin, View):
     def post(self, request, *args, **kwargs):
         super(RefundsCreateView, self).post(request, *args, **kwargs)
         data = json.loads(request.body)
-        for refund in data['refund_line_items']:
-            item = refund['line_item']
-            Transaction.objects.add_transaction(item['product_id'],
-                                                item['price'],
-                                                item['quantity'],
-                                                credit=False,
-                                                order_id=data['order_id'],
-                                                item_id=item['id'])
+        try:
+            for refund in data['refund_line_items']:
+                item = refund['line_item']
+                Transaction.objects.add_transaction(item['product_id'],
+                                                    item['price'],
+                                                    item['quantity'],
+                                                    credit=False,
+                                                    order_id=data['order_id'],
+                                                    item_id=item['id'])
+        except KeyError:
+            pass
         return HttpResponse()
