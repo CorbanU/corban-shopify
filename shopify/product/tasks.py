@@ -5,7 +5,7 @@ from celery.utils.log import get_task_logger
 
 from .csv_attach import CSVAttachmentWriter
 from .models import Transaction
-from celeryapp import app
+from config.celery import app
 
 
 logger = get_task_logger(__name__)
@@ -50,7 +50,7 @@ def email_journal_vouchers_import():
 def mail_managers(subject, message, attachment=None, fail_silently=False):
     """Send email to managers, with an optional attachment."""
     mail = EmailMessage("%s%s" % (settings.EMAIL_SUBJECT_PREFIX, subject),
-            message, to=settings.MANAGERS)
+            message, to=[a[1] for a in settings.MANAGERS])
     if attachment:
         mail.attach(attachment.getname(), attachment.getvalue(), 'text/csv')
     mail.send(fail_silently=fail_silently)
