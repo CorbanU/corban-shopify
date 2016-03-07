@@ -2,7 +2,7 @@ import environ
 
 
 root_dir = environ.Path(__file__) - 4
-project_dir = root_dir.path('mailroom')
+project_dir = root_dir.path('shopify')
 
 env = environ.Env()
 env.read_env('.env')
@@ -58,7 +58,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://localhost/mailroom'),
+    'default': env.db('DATABASE_URL', default='postgres://localhost/shopify'),
 }
 
 CACHES = {
@@ -97,7 +97,7 @@ TEMPLATES = [
 
 STATIC_ROOT = root_dir('assets')
 
-STATIC_URL = '//media.corban.edu/mailroom/'
+STATIC_URL = '//media.corban.edu/shopify/'
 
 STATICFILES_DIRS = (
     project_dir('static'),
