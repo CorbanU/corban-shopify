@@ -1,0 +1,8 @@
+{
+  "name": "shopify",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-bg-shell": "^2.3.3",
+    "load-grunt-tasks": "^3.4.1"
+  }
+}

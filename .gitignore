@@ -1,3 +1,4 @@
 celerybeat*
 htmlcov/
 .cache/
+node_modules/
