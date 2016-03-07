@@ -1,4 +1,4 @@
-from fabric.api import *
+from fabric.api import *  # noqa
 
 from fabfile import install_requirements
 from fabfile import migrate_db

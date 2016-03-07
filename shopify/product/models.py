@@ -56,8 +56,9 @@ class TransactionManager(models.Manager):
         exported.
         """
         transactions = self.filter(exported_at__isnull=True).exclude(product__account_number__isnull=True)
-        # Force queryset evaluation so we can call update on the queryset
-        amounts = list(transactions.values('product__account_number', 'order_name', 'is_credit').order_by('created_at').annotate(amount=Sum('amount')))
+        qs = transactions.values('product__account_number', 'order_name', 'is_credit').order_by('created_at')
+        # Force queryset evaluation so we can call update on the first queryset
+        amounts = list(qs.annotate(amount=Sum('amount')))
         transactions.update(exported_at=now())
         return amounts
 
