@@ -99,9 +99,7 @@ STATIC_ROOT = root_dir('assets')
 
 STATIC_URL = '//media.corban.edu/shopify/'
 
-STATICFILES_DIRS = (
-    project_dir('static'),
-)
+STATICFILES_DIRS = ()
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
