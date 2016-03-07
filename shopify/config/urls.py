@@ -7,3 +7,5 @@ urlpatterns = [
     url(r'', include('webhook.urls')),
     url(r'^admin/', include(admin.site.urls)),
 ]
+
+admin.site.site_header = admin.site.site_title = 'Corban Shopify'
