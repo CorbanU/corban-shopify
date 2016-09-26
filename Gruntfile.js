@@ -12,7 +12,8 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('local', ['bgShell:runServer']);
-  grunt.registerTask('production', []);
-  grunt.registerTask('default', ['production']);
+  grunt.registerTask('build', []);
+  grunt.registerTask('run', ['bgShell:runServer']);
+  grunt.registerTask('deploy', []);
+  grunt.registerTask('default', ['build', 'run']);
 };
