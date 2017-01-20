@@ -7,9 +7,9 @@ from django.views.generic import View
 
 from .models import Webhook
 from .utils import verify_webhook
-from notification.models import ProductNotification
-from product.models import Product
-from product.models import Transaction
+from shopify.notification.models import ProductNotification
+from shopify.product.models import Product
+from shopify.product.models import Transaction
 
 
 class ValidateMixin(object):

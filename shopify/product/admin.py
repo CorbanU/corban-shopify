@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import Product
-from notification.models import ProductNotification
+from shopify.notification.models import ProductNotification
 
 
 class ProductNotificationInline(admin.TabularInline):

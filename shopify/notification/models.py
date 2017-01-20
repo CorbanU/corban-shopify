@@ -12,7 +12,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 import dateutil.parser
 
-from product.models import Product
+from shopify.product.models import Product
 
 
 logger = logging.getLogger(__name__)

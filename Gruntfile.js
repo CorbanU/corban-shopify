@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     bgShell: {
       runServer: {
         bg: false,
-        cmd: 'python <%= pkg.name %>/manage.py runserver'
+        cmd: 'python manage.py runserver'
       }
     }
   });
