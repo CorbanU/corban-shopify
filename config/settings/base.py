@@ -40,7 +40,7 @@ MIGRATION_MODULES = {}
 
 DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 FIXTURE_DIRS = (
     project_dir('fixtures'),
@@ -97,7 +97,7 @@ TEMPLATES = [
 
 STATIC_ROOT = root_dir('assets')
 
-STATIC_URL = '//media.corban.edu/shopify/'
+STATIC_URL = env.str('DJANGO_STATIC_URL')
 
 STATICFILES_DIRS = ()
 
@@ -169,7 +169,7 @@ LOGGING = {
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-ALLOWED_HOSTS = ['shopify.corban.edu']
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
 
 BROKER_URL = 'redis://localhost:6379/1'
 
