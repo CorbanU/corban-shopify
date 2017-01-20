@@ -21,10 +21,10 @@ THIRD_PARTY_APPS = (
 )
 
 LOCAL_APPS = (
-    'notification',
-    'product',
-    'user',
-    'webhook',
+    'shopify.notification.apps.NotificationConfig',
+    'shopify.product.apps.ProductConfig',
+    'shopify.user.apps.UserConfig',
+    'shopify.webhook.apps.WebhookConfig',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
