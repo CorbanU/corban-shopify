@@ -5,8 +5,8 @@ import pytest
 from .factories import ProductFactory
 from .factories import TransactionFactory
 from .factories import WebhookFactory
-from product.models import Product
-from product.models import Transaction
+from shopify.product.models import Product
+from shopify.product.models import Transaction
 
 
 pytestmark = pytest.mark.django_db

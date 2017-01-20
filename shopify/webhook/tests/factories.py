@@ -4,9 +4,9 @@ from mock import patch
 
 from django.utils.timezone import now
 
-from product.models import Product
-from product.models import Transaction
-from webhook.models import Webhook
+from shopify.product.models import Product
+from shopify.product.models import Transaction
+from shopify.webhook.models import Webhook
 
 
 class ProductFactory(factory.django.DjangoModelFactory):

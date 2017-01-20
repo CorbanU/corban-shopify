@@ -29,14 +29,12 @@ LOCAL_APPS = (
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-)
-
-MIGRATION_MODULES = {}
+]
 
 DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
@@ -171,11 +169,11 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
 
-BROKER_URL = 'redis://localhost:6379/1'
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
 
-CELERY_RESULT_BACKEND = BROKER_URL
-CELERY_DISABLE_RATE_LIMITS = True
-CELERY_DEFAULT_QUEUE = 'shopify'
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_WORKER_DISABLE_RATE_LIMITS = True
+CELERY_TASK_DEFAULT_QUEUE = 'shopify'
 
 SHOPIFY_SHARED_SECRET = env('SHOPIFY_SHARED_SECRET')
 SHOPIFY_API_KEY = env('SHOPIFY_API_KEY')
