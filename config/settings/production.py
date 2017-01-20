@@ -13,9 +13,9 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
     ]),
 ]
 
-CELERYBEAT_SCHEDULE = {
+CELERY_BEAT_SCHEDULE = {
     'email_journal_vouchers_import': {
-        'task': 'product.tasks.email_journal_vouchers_import',
+        'task': 'shopify.product.tasks.email_journal_vouchers_import',
         # Generate import file at 21:00 every night. This matches
         # the Shopify transaction cutoff at midnight EST.
         'schedule': crontab(minute=0, hour=21),
