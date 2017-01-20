@@ -95,7 +95,7 @@ TEMPLATES = [
     },
 ]
 
-STATIC_ROOT = root_dir('assets')
+STATIC_ROOT = root_dir('staticfiles')
 
 STATIC_URL = env.str('DJANGO_STATIC_URL')
 
