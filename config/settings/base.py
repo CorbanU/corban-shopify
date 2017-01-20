@@ -1,7 +1,7 @@
 import environ
 
 
-root_dir = environ.Path(__file__) - 4
+root_dir = environ.Path(__file__) - 3
 project_dir = root_dir.path('shopify')
 
 env = environ.Env()
