@@ -6,8 +6,5 @@
   },
   "devDependencies": {
     "grunt-bg-shell": "^2.3.3"
-  },
-  "scripts": {
-    "postinstall": "grunt deploy"
   }
 }
