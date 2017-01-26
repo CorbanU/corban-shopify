@@ -1,5 +1,7 @@
 import environ
 
+from celery.schedules import crontab
+
 
 root_dir = environ.Path(__file__) - 3
 project_dir = root_dir.path('shopify')
@@ -161,11 +163,25 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
 
-CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_BROKER_URL = env.str('CELERY_BROKER_URL')
 
-CELERY_RESULT_BACKEND = CELERY_BROKER_URL
-CELERY_WORKER_DISABLE_RATE_LIMITS = True
+CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_DEFAULT_QUEUE = 'shopify'
+CELERY_WORKER_DISABLE_RATE_LIMITS = True
+CELERY_WORKER_HIJACK_ROOT_LOGGER = False
+CELERY_TASK_IGNORE_RESULT = True
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_BEAT_SCHEDULE = {
+    'email_journal_vouchers_import': {
+        'task': 'shopify.product.tasks.email_journal_vouchers_import',
+        # Generate import file at 21:00 every night. This matches
+        # the Shopify transaction cutoff at midnight EST.
+        'schedule': crontab(minute=0, hour=21),
+    }
+}
 
 SHOPIFY_SHARED_SECRET = env('SHOPIFY_SHARED_SECRET')
 SHOPIFY_API_KEY = env('SHOPIFY_API_KEY')
